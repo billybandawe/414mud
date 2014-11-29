@@ -1,3 +1,5 @@
+package main;
+
 import java.util.Random;
 
 /** Random words are useful. Apologies to linguists; this is very crude.
