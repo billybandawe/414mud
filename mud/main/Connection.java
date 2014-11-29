@@ -17,7 +17,7 @@ import mud.gamelogic.Command; /* for parse */
  character around them and put them in the game.
  @author Neil */
 
-class Connection implements Runnable {
+public class Connection implements Runnable {
 
 	private static final int bufferSize = 80;
 
@@ -142,6 +142,10 @@ class Connection implements Runnable {
 	
 	public String toString() {
 		return "Connection " + name;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 }
