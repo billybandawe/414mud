@@ -48,17 +48,32 @@ public class Command {
 			int attackerLevel = this.sender.GetLevel();
 			int attackeeLevel = playerBeingAttacked.GetLevel();
 			double random = Math.random();
+			double levelDifference = attackerLevel - attackeeLevel;
 			double probabilityOffset = (attackerLevel - attackeeLevel)/10;
 			
-			if (random > 0.5 - probabilityOffset) {
-				playerBeingAttacked.KillPlayer();
-				this.sender.UpdateLevel();
+			//Attacker wins
+			if (levelDifference > 5) {
+				
+				this.sender.UpdateLevel(playerBeingAttacked.getConnection().getName());
+				playerBeingAttacked.KillPlayer(this.sender.getConnection().getName());
+				
+			} else if (levelDifference < -5) {
+				
+				playerBeingAttacked.UpdateLevel(this.sender.getConnection().getName());
+				this.sender.KillPlayer(playerBeingAttacked.getConnection().getName());
+				
 			} else {
-				this.sender.KillPlayer();
-				playerBeingAttacked.UpdateLevel();
+				
+				if (random > 0.5 - probabilityOffset) {
+					this.sender.UpdateLevel(playerBeingAttacked.getConnection().getName());
+					playerBeingAttacked.KillPlayer(this.sender.getConnection().getName());
+				} else {
+					playerBeingAttacked.UpdateLevel(this.sender.getConnection().getName());
+					this.sender.KillPlayer(playerBeingAttacked.getConnection().getName());
+				}
+				
 			}
 		}
-		
 	}
 	
 	public void PassMessage(GamePlayer sender, List<GamePlayer> receivers, String message) {
@@ -82,11 +97,6 @@ public class Command {
 			default:
 				this.sender.ReceiveMessage("Invalid command. Please try again...");
 		}
-		
-		
-		
-		
-		
 	}
 	
 	

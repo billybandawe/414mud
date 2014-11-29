@@ -6,7 +6,6 @@ import main.Connection;
 
 public class GamePlayer extends GameStuff{
 	
-	protected int hp;
 	protected int level;
 	protected Money money;
 	private Connection connection;
@@ -14,9 +13,8 @@ public class GamePlayer extends GameStuff{
 	protected GameRoom currentRoom;
 	
 	public GamePlayer(Connection connection) {
-		this.hp = 100;
 		this.level = 1;
-		this.money = new Money(500);
+		this.money = new Money(0);
 		this.connection = connection;
 		this.mood = "Neutral";
 	}
@@ -66,12 +64,22 @@ public class GamePlayer extends GameStuff{
 		return this.currentRoom;
 	}
 	
-	public void KillPlayer() {
-		//TODO
+	public void KillPlayer(String murderer) {
+		ReceiveMessage("You have been attacked and killed by " + murderer + "\n");
+		
+		//TODO close connection
+		
 	}
 	
-	public void UpdateLevel() {
+	public void UpdateLevel(String playerYouJustKilled) {
+		ReceiveMessage("You have killed " + playerYouJustKilled + "\n");
+		
 		//TODO
+		this.level++;
+		this.money.AddMoney(50);
+		
+		ReceiveMessage("Your stats are now: " + "Level " + Integer.toString(this.level) + ", Money " + Integer.toString(this.money.GetAmount()) + "\n");
+		
 		
 	}
 
