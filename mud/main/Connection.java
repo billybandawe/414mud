@@ -17,7 +17,7 @@ import java.io.OutputStreamWriter;
 
 class Connection implements Runnable {
 
-	private static final int bufferSize = 10;
+	private static final int bufferSize = 80;
 
 	private final Socket socket;
 	private final String name = Orcish.get();
@@ -98,6 +98,8 @@ class Connection implements Runnable {
 		int no = in.read(buffer, 0, bufferSize);
 		if(no == -1) return null; /* steam closed */
 		if(no >= bufferSize) {
+			/* it will never be > bufferSize, I'm just being paranoid */
+			no = bufferSize;
 			//System.err.print("Skipping characters.\n");
 			//if(in.ready()) in.readLine(); /* <- fixme: still allocating mem :[ */
 			while(in.ready()) in.skip(1);   /* <- fixme: O(n); hack! */
