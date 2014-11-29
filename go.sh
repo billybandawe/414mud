@@ -1,3 +1,3 @@
 #!/bin/sh
 cd bin
-java FourOneFourMud
+java main.FourOneFourMud
