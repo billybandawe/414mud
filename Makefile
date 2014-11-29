@@ -3,8 +3,8 @@
 PROJ  := 414Mud
 VA    := 1
 VB    := 0
-FILES := FourOneFourMud Connection Orcish
-SDIR  := src
+FILES := main/FourOneFourMud main/Connection main/Orcish
+SDIR  := mud
 BDIR  := bin
 BACK  := backup
 ICON  := go.sh #icon.ico
@@ -15,7 +15,7 @@ SRCS  := $(patsubst %,$(SDIR)/%.java,$(FILES))
 #H     := $(patsubst %,$(SDIR)/%.h,$(FILES))
 
 CC   := javac
-CF   := -g:none -O -d $(BDIR) $(SDIR)/*.java -Xlint:unchecked -Xlint:deprecation #-verbose
+CF   := -g:none -O -d $(BDIR) $(SDIR)/main/*.java -Xlint:unchecked -Xlint:deprecation #-verbose
 OF   := # -framework OpenGL -framework GLUT
 
 default: $(OBJS)
