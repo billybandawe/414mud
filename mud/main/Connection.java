@@ -17,11 +17,14 @@ import java.io.OutputStreamWriter;
 
 public class Connection implements Runnable {
 
+	private static final int bufferSize = 80;
+
 	private final Socket socket;
 	private final String name = Orcish.get();
 	private final FourOneFourMud mud;
 	private PrintWriter   out;
 	private BufferedReader in;
+	private char buffer[];
 	/* fixme: ip */
 
 	/** Initalize the connection.
@@ -31,35 +34,40 @@ public class Connection implements Runnable {
 		System.err.print(this + " initialising.\n");
 		this.socket = socket;
 		this.mud    = mud;
+		this.buffer = new char[bufferSize];
 	}
 
 	/** The server-side handler for connections. */
 	public void run() {
 		System.err.print(this + " up and running, waiting for character creation.\n");
-		/* autoflush */
 		try(
-			PrintWriter   out = new PrintWriter(socket.getOutputStream(), true);
+			PrintWriter   out = new PrintWriter(socket.getOutputStream(), true /* autoflush (doesn't work) */);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		) {
+			String input;
+
+			/* make these class variables so others can talk to us using
+			 sentTo(), getFrom() */
 			this.out = out;
 			this.in  = in;
 
-			String input, foo = "foo";
+			this.sendTo("You are " + this + ".\n");
 
-			//System.err.print("Sending \"" + foo + "\" to " + this + ".\n");
-			this.sendTo("You are " + this + "; " + foo + ".\n");
 			while((input = this.getFrom()) != null) {
-				if(input.length() == 0) break;
-				System.out.print(this + " sent \"" + input + ".\"\n");
+
+				if(input.length() == 0) break; /* <- they will be loged out */
+
 				this.sendTo(this + " sent \"" + input + ".\"\n");
+
+				/* migrate to Commands */
 				if(input.compareToIgnoreCase("shutdown") == 0) {
 					mud.shutdown();
 					break;
 				}
 			}
-			out.print("10-4 over and out.\n");
-			out.flush();
-			System.err.print("Closing " + this + ".\n");
+
+			this.sendTo("Closing " + this + ".\n");
+
 		} catch(UnsupportedEncodingException e) {
 			System.err.print(this + " doesn't like UTF-8 " + e + ".\n");
 		} catch(IOException e) {
@@ -81,11 +89,25 @@ public class Connection implements Runnable {
 		System.err.print("Sending " + this + ": " + message);
 	}
 
-	/** Wait for a message from the connection.
+	/** Wait for a message from the connection. Ignores characters beyond
+	 bufferSize.
 	 @return The message. */
 	public String getFrom() throws IOException {
 		if(in == null) return null;
-		return in.readLine();
+		/* no way that's safe: return in.readLine();*/
+		int no = in.read(buffer, 0, bufferSize);
+		if(no == -1) return null; /* steam closed */
+		if(no >= bufferSize) {
+			/* it will never be > bufferSize, I'm just being paranoid */
+			no = bufferSize;
+			//System.err.print("Skipping characters.\n");
+			//if(in.ready()) in.readLine(); /* <- fixme: still allocating mem :[ */
+			while(in.ready()) in.skip(1);   /* <- fixme: O(n); hack! */
+		}
+		String input = new String(buffer, 0, no).trim();
+		System.err.print(this + ".getFrom: " + input + "\n");
+
+		return input;
 	}
 
 	public String toString() {
