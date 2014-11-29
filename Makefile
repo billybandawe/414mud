@@ -3,7 +3,7 @@
 PROJ  := 414Mud
 VA    := 1
 VB    := 0
-FILES := main/FourOneFourMud main/Connection main/Orcish
+FILES := main/FourOneFourMud main/Connection main/Orcish main/package-info gamelogic/Command gamelogic/package-info
 SDIR  := mud
 BDIR  := bin
 BACK  := backup
@@ -15,7 +15,7 @@ SRCS  := $(patsubst %,$(SDIR)/%.java,$(FILES))
 #H     := $(patsubst %,$(SDIR)/%.h,$(FILES))
 
 CC   := javac
-CF   := -g:none -O -d $(BDIR) $(SDIR)/main/*.java -Xlint:unchecked -Xlint:deprecation #-verbose
+CF   := -g:none -O -d $(BDIR) $(SDIR)/main/*.java $(SDIR)/gamelogic/*.java -Xlint:unchecked -Xlint:deprecation #-verbose
 OF   := # -framework OpenGL -framework GLUT
 
 default: $(OBJS)

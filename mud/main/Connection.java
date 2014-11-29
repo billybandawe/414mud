@@ -3,13 +3,15 @@ package main;
 import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-//import java.io.OutputStreamWriter;
+import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
-import java.io.OutputStreamWriter;
+import mud.gamelogic.Command; /* for parse */
 
 /** Connections are the people connected to our mud; later we will build a
  character around them and put them in the game.
@@ -18,6 +20,11 @@ import java.io.OutputStreamWriter;
 class Connection implements Runnable {
 
 	private static final int bufferSize = 80;
+
+	/* each player has their own commands that changes; eg, a connection has
+	 limited options, but once you have a body, you can do much more; eg, some
+	 players might not be able to shutdown the mud; @see{#refreshCommands} */
+	private final Map<String, Runnable> commands = new HashMap<String, Runnable>();
 
 	private final Socket socket;
 	private final String name = Orcish.get();
@@ -35,6 +42,13 @@ class Connection implements Runnable {
 		this.socket = socket;
 		this.mud    = mud;
 		this.buffer = new char[bufferSize];
+		refreshCommands();
+	}
+
+	void refreshCommands() {
+		commands.clear();
+		commands.put("say",      () -> { System.err.print("say was called\n"); this.sendTo("hey\n"); });
+		commands.put("shutdown", () -> { System.err.print("shutdown was called\n"); });
 	}
 
 	/** The server-side handler for connections. */
@@ -59,7 +73,10 @@ class Connection implements Runnable {
 
 				this.sendTo(this + " sent \"" + input + ".\"\n");
 
-				/* migrate to Commands */
+				/* migrate to Commands
+				 eg, parse(input) */
+				//Command.parse(input);
+				parse(input);
 				if(input.compareToIgnoreCase("shutdown") == 0) {
 					mud.shutdown();
 					break;
@@ -109,7 +126,20 @@ class Connection implements Runnable {
 
 		return input;
 	}
-
+	
+	/** This parses the string and does stuff.
+	 @param cmd
+	 A command to parse. */
+	public void parse(final String cmd) {
+		System.err.print("Command::parse: " + cmd + ".\n");
+		Runnable run = commands.get(cmd);
+		if(run == null) {
+			System.out.print("Huh? " + cmd + "\n");
+		} else {
+			run.run();
+		}
+	}
+	
 	public String toString() {
 		return "Connection " + name;
 	}
