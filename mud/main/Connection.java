@@ -15,7 +15,7 @@ import java.io.OutputStreamWriter;
  character around them and put them in the game.
  @author Neil */
 
-class Connection implements Runnable {
+public class Connection implements Runnable {
 
 	private final Socket socket;
 	private final String name = Orcish.get();
@@ -90,6 +90,10 @@ class Connection implements Runnable {
 
 	public String toString() {
 		return "Connection " + name;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 }

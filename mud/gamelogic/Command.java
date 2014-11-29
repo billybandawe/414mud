@@ -10,12 +10,10 @@ public class Command {
 	
 	public String input;
 	protected GamePlayer sender;
-	protected GamePlayer[] receiver;
 		
-	public Command(String command, GamePlayer player, GamePlayer[] args){
+	public Command(String command, GamePlayer player){
 		this.input = input;
-		this.sender = sender;
-		this.receiver = args;
+		this.sender = player;
 	}
 	
 	public void ParseCommand() {
@@ -25,25 +23,69 @@ public class Command {
 		switch (command) {
 			case "say":
 				String dialogue = GameActions.Say(splitInput);
-				PassMessage(sender, receiver, dialogue);
+				PassMessage(sender, this.sender.GetCurrentRoom().getPlayersInRoom(), dialogue);
 				break;
-				
-			case "sayto":
-				
+			case "attack":
+				ProcessAttack(splitInput.get(0));
+				break;
+			default:
+				MovePlayer(command);
+		}
+	}
+	
+	public void ProcessAttack(String playerToAttack) {
+		List<GamePlayer> playersInRoom = this.sender.GetCurrentRoom().getPlayersInRoom();
 		
+		GamePlayer playerBeingAttacked = null;
+		
+		for (GamePlayer player : playersInRoom) {
+			if (player.getConnection().getName().compareToIgnoreCase(playerToAttack) == 0) {
+				playerBeingAttacked = player;
+			}
 		}
 		
-		
-		
-		
-		
+		if (playerBeingAttacked != null) {
+			int attackerLevel = this.sender.GetLevel();
+			int attackeeLevel = playerBeingAttacked.GetLevel();
+			double random = Math.random();
+			double probabilityOffset = (attackerLevel - attackeeLevel)/10;
+			
+			if (random > 0.5 - probabilityOffset) {
+				playerBeingAttacked.KillPlayer();
+				this.sender.UpdateLevel();
+			} else {
+				this.sender.KillPlayer();
+				playerBeingAttacked.UpdateLevel();
+			}
+		}
 		
 	}
 	
-	public void PassMessage(GamePlayer sender, GamePlayer[] receivers, String message) {
+	public void PassMessage(GamePlayer sender, List<GamePlayer> receivers, String message) {
 		for(GamePlayer receiver : receivers) {
-			receiver.ReceiveMessage(sender.getConnection().getName() + "\\ssays " + message);
+			receiver.ReceiveMessage(sender.getConnection().getName() + "\\ssays: " + message);
 		}
+	}
+	
+	public void MovePlayer(String command) {
+		GameRoom[] roomsNearby = this.sender.GetCurrentRoom().RoomsNearby();
+		
+		switch (command) {
+			case "north":
+				this.sender.SetRoom(roomsNearby[0]);
+			case "south":
+				this.sender.SetRoom(roomsNearby[1]);
+			case "east":
+				this.sender.SetRoom(roomsNearby[2]);
+			case "west":
+				this.sender.SetRoom(roomsNearby[3]);
+			default:
+				this.sender.ReceiveMessage("Invalid command. Please try again...");
+		}
+		
+		
+		
+		
 		
 	}
 	
