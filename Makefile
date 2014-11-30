@@ -3,7 +3,7 @@
 PROJ  := 414Mud
 VA    := 1
 VB    := 0
-FILES := main/FourOneFourMud main/Connection main/Commands main/Orcish main/package-info # gamelogic/Command gamelogic/package-info
+FILES := main/FourOneFourMud main/Connection main/Commandset main/Orcish main/package-info # gamelogic/Command gamelogic/package-info
 SDIR  := mud
 BDIR  := bin
 BACK  := backup

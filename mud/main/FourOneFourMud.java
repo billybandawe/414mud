@@ -41,6 +41,8 @@ class FourOneFourMud {
 
 	private List<Connection> clients;
 
+	private final Commandset common;
+
 	/* fixme: whenStarted, name, connected, players, etc . . . */
 
 	/** The entire mud constructor.
@@ -53,6 +55,7 @@ class FourOneFourMud {
 		serverSocket = new ServerSocket(port);
 		pool         = Executors.newFixedThreadPool(poolSize);
 		clients      = new LinkedList<Connection>();
+		common       = new Commandset("Common");
 	}
 
 	/** Run the mud. */

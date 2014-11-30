@@ -23,8 +23,9 @@ public class Connection implements Runnable {
 	/* each player has their own commands that changes; eg, a connection has
 	 limited options, but once you have a body, you can do much more; eg, some
 	 players might not be able to shutdown the mud; @see{#refreshCommands} */
-	private final Map<String, Method> commands = new HashMap<String, Method>();
+	//private final Map<String, Method> commands = new HashMap<String, Method>();
 
+	private final Commandset commands;
 	private final Socket socket;
 	private final String name = Orcish.get();
 	private final FourOneFourMud mud;
@@ -33,32 +34,15 @@ public class Connection implements Runnable {
 	private char buffer[];
 	/* fixme: ip */
 
-	private interface Command {
-		void command(Connection c);
-	}
-
 	/** Initalize the connection.
 	 @param socket
 		the client socket */
 	Connection(final Socket socket, final FourOneFourMud mud) {
 		System.err.print(this + " initialising.\n");
+		this.commands = new Commandset("fixme");
 		this.socket = socket;
 		this.mud    = mud;
 		this.buffer = new char[bufferSize];
-		refreshCommands();
-	}
-
-	void refreshCommands() {
-		commands.clear();
-		try {
-			commands.put("say", Commands.class.getMethod("sendTo"));
-			commands.put("string", this.getClass().getMethod("toString"));
-			commands.put("say", this.getClass().getMethod("sendTo", String.class));
-			//		commands.put("say",      () -> { this.sendTo("?\n"); });
-			//		commands.put("shutdown", () -> { System.err.print("shutdown was called\n"); });
-		} catch(NoSuchMethodException e) {
-			System.err.print("Refreshing the commands: " + e + "!\n");
-		}
 	}
 
 	/** The server-side handler for connections. */
@@ -83,7 +67,8 @@ public class Connection implements Runnable {
 
 				this.sendTo(this + " sent \"" + input + ".\"\n");
 
-				parse(input);
+				//parse(input);
+				commands.interpret(this, input);
 				/* fixme: remove this */
 				if(input.compareToIgnoreCase("shutdown") == 0) {
 					mud.shutdown();
@@ -138,7 +123,7 @@ public class Connection implements Runnable {
 	/** This parses the string and does stuff.
 	 @param cmd
 	 A command to parse. */
-	public void parse(final String cmd) {
+	/*public void parse(final String cmd) {
 		System.err.print("Command::parse: " + cmd + ".\n");
 		Method run = commands.get(cmd);
 		if(run == null) {
@@ -150,7 +135,7 @@ public class Connection implements Runnable {
 				System.err.print(this + " can't do that: " + e + ".\n");
 			}
 		}
-	}
+	}*/
 	
 	public String toString() {
 		return "Connection " + name;
