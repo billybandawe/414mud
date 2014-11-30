@@ -20,9 +20,6 @@ public class Connection implements Runnable {
 
 	private static final int bufferSize = 80;
 
-	/* each player has their own commands that changes; eg, a connection has
-	 limited options, but once you have a body, you can do much more; eg, some
-	 players might not be able to shutdown the mud; @see{#refreshCommands} */
 	//private final Map<String, Method> commands = new HashMap<String, Method>();
 
 	private final Commandset commands;
@@ -37,12 +34,12 @@ public class Connection implements Runnable {
 	/** Initalize the connection.
 	 @param socket
 		the client socket */
-	Connection(final Socket socket, final FourOneFourMud mud) {
+	Connection(final Socket socket, final FourOneFourMud mud, final Commandset cs) {
 		System.err.print(this + " initialising.\n");
-		this.commands = new Commandset("fixme");
-		this.socket = socket;
-		this.mud    = mud;
-		this.buffer = new char[bufferSize];
+		this.commands = cs;
+		this.socket   = socket;
+		this.mud      = mud;
+		this.buffer   = new char[bufferSize];
 	}
 
 	/** The server-side handler for connections. */

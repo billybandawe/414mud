@@ -41,7 +41,9 @@ class FourOneFourMud {
 
 	private List<Connection> clients;
 
+	private final Commandset newbie;
 	private final Commandset common;
+	private final Commandset immortal;
 
 	/* fixme: whenStarted, name, connected, players, etc . . . */
 
@@ -55,7 +57,10 @@ class FourOneFourMud {
 		serverSocket = new ServerSocket(port);
 		pool         = Executors.newFixedThreadPool(poolSize);
 		clients      = new LinkedList<Connection>();
+		/* fixme: actually make them different */
+		newbie       = new Commandset("Newbie");
 		common       = new Commandset("Common");
+		immortal     = new Commandset("Immortal");
 	}
 
 	/** Run the mud. */
@@ -63,7 +68,7 @@ class FourOneFourMud {
 		/* fixme: how to get try-with-resorces to work? */
 		try {
 			for( ; ; ) {
-				Connection client = new Connection(serverSocket.accept(), this);
+				Connection client = new Connection(serverSocket.accept(), this, newbie);
 				clients.add(client);
 				pool.execute(client);
 			}

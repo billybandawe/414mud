@@ -4,11 +4,15 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
 
-/** Commands.
+/** Commands. eg, a connection has limited options (Newbie,) but once you have
+ a body, you can do much more (Common) but some players be able to shutdown the
+ mud (Immortal.)
+
  @author Neil */
 
 public class Commandset {
 
+	//public enum Level 
 	private final String name;
 	private final Map<String, Method> commands = new HashMap<String, Method>();
 
