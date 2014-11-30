@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
 
+import java.net.Socket; /* for Connection */
+
 /** Commands. eg, a connection has limited options (Newbie,) but once you have
  a body, you can do much more (Common) but some players be able to shutdown the
  mud (Immortal.) Very primitive.
@@ -11,6 +13,33 @@ import java.lang.reflect.Method;
  @author Neil */
 
 public class Commandset {
+
+	/* these are the commands! */
+
+	private static void say(final Connection c, final String arg) {
+		System.out.print(c + ": " + arg + "\n");
+		/* fixme: say to room! */
+		c.sendTo(c + ": " + arg);
+	}
+
+	private static void cant(final Connection c, final String arg) {
+		c.sendTo("You can't do that, yet. Use create <name> to create your character.");
+	}
+
+	private static void create(final Connection c, final String arg) {
+		c.sendTo("You create a character named " + arg + "! (oops, that's not implemented yet.)");
+	}
+
+	private static void shutdown(final Connection c, final String arg) {
+		if(arg.length() != 0) {
+			c.sendTo("Command takes no arguments.");
+			return;
+		}
+		System.out.print(c + " initated shutdown.\n");
+		c.getMud().shutdown();
+	}
+
+	/* this is the setup for dealing with them */
 
 	public enum Level { NEWBIE, COMMON, IMMORTAL }
 
@@ -22,17 +51,27 @@ public class Commandset {
 		The level, Commandset.Level.{ NEWBIE, COMMON, IMMORTAL }. */
 	public Commandset(Level level) {
 		this.level = level;
-		Class<?> c = this.getClass();
+
+		switch(level) {
+			case IMMORTAL:
+				add("shutdown", "shutdown");
+			case COMMON:
+				add("say", "say");
+				add("chat", "cant"/*fixme*/);
+				break;
+			case NEWBIE:
+				add("say",    "cant");
+				add("chat",   "cant");
+				add("create", "create");
+				/* debug */
+				add("shutdown", "shutdown");
+				break;
+		}
+	}
+
+	private void add(final String command, final String method) {
 		try {
-			/* these are all levels */
-			switch(level) {
-				case IMMORTAL:
-				case COMMON:
-					break;
-				case NEWBIE:
-					commands.put("say", c.getDeclaredMethod("say", Connection.class, String.class));
-					break;
-			}
+			commands.put(command, this.getClass().getDeclaredMethod(method, Connection.class, String.class));
 		} catch (NoSuchMethodException e) {
 			System.err.print(this + ": " + e + "!\n");
 		}
@@ -64,7 +103,8 @@ public class Commandset {
 			System.out.print("Huh? " + cmd + "\n");
 		} else {
 			try {
-				/* null: static method; fixme: extend Connection */
+				/* null: static method; extend Connection? nice try,
+				 "object is not an instance of declaring class" */
 				run.invoke(null, c, arg);
 			} catch(Exception e) {
 				c.sendTo("Can't do that.\n");
@@ -76,12 +116,6 @@ public class Commandset {
 	/** @return Synecdoche. */
 	public String toString() {
 		return "CommandSet " + level;
-	}
-
-	/** these are all the commands! */
-
-	static void say(final Connection c, final String line) {
-		System.out.print(c + ": " + line + "\n");
 	}
 
 }

@@ -57,7 +57,6 @@ class FourOneFourMud {
 		serverSocket = new ServerSocket(port);
 		pool         = Executors.newFixedThreadPool(poolSize);
 		clients      = new LinkedList<Connection>();
-		/* fixme: actually make them different */
 		newbie       = new Commandset(Commandset.Level.NEWBIE);
 		common       = new Commandset(Commandset.Level.COMMON);
 		immortal     = new Commandset(Commandset.Level.IMMORTAL);
@@ -68,7 +67,8 @@ class FourOneFourMud {
 		/* fixme: how to get try-with-resorces to work? */
 		try {
 			for( ; ; ) {
-				Connection client = new Connection(serverSocket.accept(), this, newbie);
+				/* fixme! immortal -> newbie (makes testing difficult) */
+				Connection client = new Connection(serverSocket.accept(), this, immortal);
 				clients.add(client);
 				pool.execute(client);
 			}

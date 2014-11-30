@@ -56,24 +56,22 @@ public class Connection implements Runnable {
 			this.out = out;
 			this.in  = in;
 
-			this.sendTo("You are " + this + ".\n");
+			this.sendTo("You are " + this + ".");
 
 			while((input = this.getFrom()) != null) {
 
 				if(input.length() == 0) break; /* <- they will be loged out */
 
-				this.sendTo(this + " sent \"" + input + ".\"\n");
+				//this.sendTo(this + " sent \"" + input + ".\"");
 
-				//parse(input);
 				commands.interpret(this, input);
-				/* fixme: remove this */
+				/* fixme: remove this by making the inerpret boolean */
 				if(input.compareToIgnoreCase("shutdown") == 0) {
-					mud.shutdown();
 					break;
 				}
 			}
 
-			this.sendTo("Closing " + this + ".\n");
+			this.sendTo("Closing " + this + ".");
 
 		} catch(UnsupportedEncodingException e) {
 			System.err.print(this + " doesn't like UTF-8: " + e + ".\n");
@@ -91,9 +89,9 @@ public class Connection implements Runnable {
 	public void sendTo(final String message) {
 		/* "telnet newline sequence \r\n" <- or this? */
 		if(out == null) return;
-		out.print(message);
+		out.print(message + "\n");
 		out.flush();
-		System.err.print("Sending " + this + ": " + message);
+		System.err.print("Sending " + this + ": " + message + "\n");
 	}
 
 	/** Wait for a message from the connection. Ignores characters beyond
@@ -133,7 +131,11 @@ public class Connection implements Runnable {
 			}
 		}
 	}*/
-	
+
+	public FourOneFourMud getMud() {
+		return mud;
+	}
+
 	public String toString() {
 		return "Connection " + name;
 	}
