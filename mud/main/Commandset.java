@@ -18,6 +18,14 @@ import gameentities.Room;
 public class Commandset {
 
 	/* these are the commands! */
+	
+	private static void help(final Connection c, final String arg) {
+		Commandset set = c.getCommandset();
+		c.sendTo("These are the commands which you are authorised to use right now:");
+		for (Map.Entry<String, Method> entry : set.commands.entrySet()) {
+			c.sendTo(entry.getKey()/* + ":" + entry.getValue()*/);
+		}
+	}
 
 	private static void exit(final Connection c, final String arg) {
 		System.err.print(c + " has exited.\n");
@@ -86,6 +94,8 @@ public class Commandset {
 
 		add("exit", "exit");
 		add("quit", "exit");
+		add("help", "help");
+		add("?", "help");
 		switch(level) {
 			case IMMORTAL:
 				add("shutdown", "shutdown");

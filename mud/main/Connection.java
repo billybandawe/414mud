@@ -96,7 +96,7 @@ public class Connection implements Runnable {
 		if(out == null) return;
 		out.print(message + "\n");
 		out.flush();
-		System.err.print("Sending " + this + ": " + message + "\n");
+		//System.err.print("Sending " + this + ": " + message + "\n");
 	}
 
 	/** Wait for a message from the connection. Ignores characters beyond
@@ -134,6 +134,10 @@ public class Connection implements Runnable {
 
 	public void setImmortal() {
 		commands = immortal;
+	}
+
+	public Commandset getCommandset() {
+		return commands;
 	}
 
 	public Player getPlayer() {
