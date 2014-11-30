@@ -20,6 +20,7 @@ class FourOneFourMud {
 	private static final int maxConnections = 256;
 	private static final int sShutdownTime  = 20;
 	private static final String area        = "troter.area";
+	private static final String name        = "414Mud";
 
 	private static String password;
 
@@ -113,7 +114,7 @@ class FourOneFourMud {
 
 	/** Closes a connection. */
 	public void deleteClient(Connection c) {
-		System.err.print(c + " is closed? " + c.getSocket().isClosed() + "; removing from Mud.\n");
+		System.err.print(c + " is closed: " + c.getSocket().isClosed() + "; removing from Mud.\n");
 		clients.remove(c);
 	}
 
@@ -128,7 +129,7 @@ class FourOneFourMud {
 
 	/** prints out the mud info */
 	public String toString() {
-		return "414Mud"; /* fixme: update as more info becomes available */
+		return name;
 	}
 
 	private Room load(String area) {
