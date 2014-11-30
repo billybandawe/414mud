@@ -7,7 +7,7 @@ public class NPC extends Character {
 
 	public NPC() {
 		super();
-		line = "Someone is looking confused.";
+		line = "someone is looking confused";
 	}
 
 }

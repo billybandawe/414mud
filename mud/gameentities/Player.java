@@ -10,7 +10,8 @@ public class Player extends Character {
 		super();
 		this.connection = connection;
 		this.line = name + " is neutral.";
-		this.name.add(name);
+		//this.name.add(name);
+		this.name = name;
 	}
 
 /*	public void kill(Stuff murderer) {
@@ -31,5 +32,10 @@ public class Player extends Character {
 		
 		
 	}*/
+	
+	@Override
+	protected Connection getConnection() {
+		return connection;
+	}
 
 }

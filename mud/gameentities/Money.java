@@ -7,9 +7,10 @@ public class Money extends Object {
 	public Money() {
 		super();
 		amount = 1;
-		line = "One dollar is sitting on the ground.";
-		name.add("money");
-		name.add("dollar");
+		line = "one dollar is sitting on the ground";
+		/*name.add("money");
+		name.add("dollar");*/
+		name = "money";
 	}
 
 	public Money(int amount) {

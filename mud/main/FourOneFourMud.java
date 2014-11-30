@@ -21,10 +21,18 @@ class FourOneFourMud {
 	private static final int sShutdownTime  = 20;
 	private static final String area        = "troter.area";
 
+	private static String password;
+
 	/** Starts up the mud and listens for connections.
 	 @param args
 		for future use */
 	public static void main(String args[]) {
+
+		/* sets the optional password to become an Immortal */
+		password = "";
+		if(args.length >= 1) password = args[0];
+		System.err.print("Set the secret password for becoming an Immortal: <" + password + ">.\n");
+
 		try {
 
 			FourOneFourMud mud = new FourOneFourMud(fibonacci20, maxConnections);
@@ -54,7 +62,8 @@ class FourOneFourMud {
 	 @param poolSize
 		how many simultaneous connections should we allow */
 	public FourOneFourMud(int port, int poolSize) throws IOException {
-		System.err.print("414Mud starting up.\n");
+		System.err.print("414Mud starting up on port " + port
+						 + "; FixedThreadPool size " + poolSize + ".\n");
 		serverSocket = new ServerSocket(port);
 		pool         = Executors.newFixedThreadPool(poolSize);
 		centerOfUniverse = load(area);
@@ -104,8 +113,8 @@ class FourOneFourMud {
 
 	/** Closes a connection. */
 	public void deleteClient(Connection c) {
-		System.err.print("trdhfg!!!!!!!!!!!!!!!");
-		//clients.delete(c);
+		System.err.print(c + " is closed? " + c.getSocket().isClosed() + "; removing from Mud.\n");
+		clients.remove(c);
 	}
 
 	/** closes the server; it will detect this, and shutdown */
@@ -129,6 +138,13 @@ class FourOneFourMud {
 
 	public Room getUniverse() {
 		return this.centerOfUniverse;
+	}
+
+	/** @param p
+		The test password.
+	 @return True is the password matches the one when the mud started up. */
+	public boolean comparePassword(final String p) {
+		return p.compareTo(password) == 0;
 	}
 
 }

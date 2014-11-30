@@ -17,6 +17,9 @@ import gameentities.Room;
 
 public class Commandset {
 
+	private static final int minName = 3;
+	private static final int maxName = 10;
+
 	/* these are the commands! */
 	
 	private static void help(final Connection c, final String arg) {
@@ -28,7 +31,10 @@ public class Commandset {
 	}
 
 	private static void exit(final Connection c, final String arg) {
-		System.err.print(c + " has exited.\n");
+		//System.err.print(c + " has exited.\n");
+		Player p = c.getPlayer();
+		if(p != null) p.sendToRoom(p + " has suddenly vashished.");
+		c.sendTo("Goodbye.");
 		c.setExit();
 	}
 
@@ -43,6 +49,21 @@ public class Commandset {
 	}
 
 	private static void create(final Connection c, final String arg) {
+		int len = arg.length();
+		if(len < minName) {
+			c.sendTo("Your name must be at least " + minName + " characters.");
+			return;
+		}
+		if(len > maxName) {
+			c.sendTo("Your name must be bounded by " + maxName + " characters.");
+			return;
+		}
+		for(char ch : arg.toCharArray()) {
+			c.sendTo("" + ch);
+		}
+
+		//Character.isLetter(str.charAt(i));
+
 		Player p = new Player(c, arg);
 		c.sendTo("You create a character named " + arg + "!");
 		c.setPlayer(p);
@@ -61,7 +82,11 @@ public class Commandset {
 			c.sendTo("You are floating in space.");
 			return;
 		}
-		c.sendTo(surround.line);
+		c.sendTo(surround.lookDetailed());
+		for(Stuff s : surround.getContents()) {
+			if(p == s) continue;
+			c.sendTo(s.look());
+		}
 	}
 
 	private static void shutdown(final Connection c, final String arg) {
@@ -75,8 +100,19 @@ public class Commandset {
 	}
 
 	private static void ascend(final Connection c, final String arg) {
-		System.err.print(c + " is ascending. (Not! that's not implemented.)\n");
-		c.sendTo("Not implemented.");
+		Player p = c.getPlayer();
+		if(p == null) {
+			c.sendTo("You must have a body.");
+			return;
+		}
+		if(!c.getMud().comparePassword(arg)) {
+			c.sendTo("That's not the password.");
+			return;
+		}
+		System.err.print(c + " has ascended.\n");
+		p.sendToRoom("A glorious light surronds " + c + " as they ascend.");
+		c.sendTo("You are now an immotal; type help.");
+		c.setImmortal();
 	}
 
 	/* this is the setup for dealing with them */

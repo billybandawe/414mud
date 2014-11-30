@@ -17,8 +17,9 @@ public class Character extends Stuff {
 		totalhp = hp = 50;
 		level = 1;
 		money = 50;
-		line  = "Someone is chilling.";
-		name.add("someone");
+		line  = "someone is chilling";
+		//name.add("someone");
+		name = "someone";
 	}
 
 	/*public kill() {

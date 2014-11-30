@@ -11,7 +11,8 @@ public class Room extends Stuff {
 	public Room() {
 		super();
 		description = "This is an entrely bland room.";
-		line        = "A room.";
+		line        = "a room";
+		name        = "room";
 	}
 
 	/*public void put(Stuff s) {
@@ -21,5 +22,10 @@ public class Room extends Stuff {
 	/*void setDescription(String description) {
 		this.description = description;
 	}*/
+
+	@Override
+	public String lookDetailed() {
+		return "(" + name + ")" + line + "\n" + description;
+	}
 
 }

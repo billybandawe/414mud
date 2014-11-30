@@ -40,7 +40,7 @@ public class Connection implements Runnable {
 	 @param socket
 		the client socket */
 	Connection(final Socket socket, final FourOneFourMud mud) {
-		System.err.print(this + " initialising.\n");
+		System.err.print(this + " has connected to " + mud + ".\n");
 		this.commands = newbie;
 		this.socket   = socket;
 		this.mud      = mud;
@@ -49,7 +49,7 @@ public class Connection implements Runnable {
 
 	/** The server-side handler for connections. */
 	public void run() {
-		System.err.print(this + " up and running, waiting for character creation.\n");
+		//System.err.print(this + " up and running, waiting for character creation.\n");
 		try(
 			PrintWriter   out = new PrintWriter(socket.getOutputStream(), true /* autoflush (doesn't work) */);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -85,7 +85,6 @@ public class Connection implements Runnable {
 			this.in  = null;
 		}
 
-		System.err.print(this + " is not used.\n");
 	}
 
 	/** Send a message to the connection.
@@ -115,7 +114,7 @@ public class Connection implements Runnable {
 			while(in.ready()) in.skip(1);   /* <- fixme: O(n); hack! */
 		}
 		String input = new String(buffer, 0, no).trim();
-		System.err.print(this + ".getFrom: " + input + "\n");
+		//System.err.print(this + ".getFrom: " + input + "\n");
 
 		return input;
 	}
@@ -130,6 +129,10 @@ public class Connection implements Runnable {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public Socket getSocket() {
+		return socket;
 	}
 
 	public void setImmortal() {
@@ -151,6 +154,12 @@ public class Connection implements Runnable {
 
 	public void setExit() {
 		isExit = true;
+	}
+
+	/* not used */
+	public void sendToRoom(final String s) {
+		if(player == null) return;
+		player.sendToRoom(s);
 	}
 
 }
