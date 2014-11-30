@@ -10,8 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-
-import mud.gamelogic.Command; /* for parse */
+import java.lang.reflect.Method;
 
 /** Connections are the people connected to our mud; later we will build a
  character around them and put them in the game.
@@ -24,7 +23,7 @@ public class Connection implements Runnable {
 	/* each player has their own commands that changes; eg, a connection has
 	 limited options, but once you have a body, you can do much more; eg, some
 	 players might not be able to shutdown the mud; @see{#refreshCommands} */
-	private final Map<String, Runnable> commands = new HashMap<String, Runnable>();
+	private final Map<String, Method> commands = new HashMap<String, Method>();
 
 	private final Socket socket;
 	private final String name = Orcish.get();
@@ -33,6 +32,10 @@ public class Connection implements Runnable {
 	private BufferedReader in;
 	private char buffer[];
 	/* fixme: ip */
+
+	private interface Command {
+		void command(Connection c);
+	}
 
 	/** Initalize the connection.
 	 @param socket
@@ -47,8 +50,15 @@ public class Connection implements Runnable {
 
 	void refreshCommands() {
 		commands.clear();
-		commands.put("say",      () -> { System.err.print("say was called\n"); this.sendTo("hey\n"); });
-		commands.put("shutdown", () -> { System.err.print("shutdown was called\n"); });
+		try {
+			commands.put("say", Commands.class.getMethod("sendTo"));
+			commands.put("string", this.getClass().getMethod("toString"));
+			commands.put("say", this.getClass().getMethod("sendTo", String.class));
+			//		commands.put("say",      () -> { this.sendTo("?\n"); });
+			//		commands.put("shutdown", () -> { System.err.print("shutdown was called\n"); });
+		} catch(NoSuchMethodException e) {
+			System.err.print("Refreshing the commands: " + e + "!\n");
+		}
 	}
 
 	/** The server-side handler for connections. */
@@ -73,10 +83,8 @@ public class Connection implements Runnable {
 
 				this.sendTo(this + " sent \"" + input + ".\"\n");
 
-				/* migrate to Commands
-				 eg, parse(input) */
-				//Command.parse(input);
 				parse(input);
+				/* fixme: remove this */
 				if(input.compareToIgnoreCase("shutdown") == 0) {
 					mud.shutdown();
 					break;
@@ -86,9 +94,9 @@ public class Connection implements Runnable {
 			this.sendTo("Closing " + this + ".\n");
 
 		} catch(UnsupportedEncodingException e) {
-			System.err.print(this + " doesn't like UTF-8 " + e + ".\n");
+			System.err.print(this + " doesn't like UTF-8: " + e + ".\n");
 		} catch(IOException e) {
-			System.err.print(this + " " + e + ".\n");
+			System.err.print(this + ": " + e + ".\n");
 		} finally {
 			this.out = null;
 			this.in  = null;
@@ -132,11 +140,15 @@ public class Connection implements Runnable {
 	 A command to parse. */
 	public void parse(final String cmd) {
 		System.err.print("Command::parse: " + cmd + ".\n");
-		Runnable run = commands.get(cmd);
+		Method run = commands.get(cmd);
 		if(run == null) {
 			System.out.print("Huh? " + cmd + "\n");
 		} else {
-			run.run();
+			try {
+				run.invoke(this);
+			} catch(Exception e) {
+				System.err.print(this + " can't do that: " + e + ".\n");
+			}
 		}
 	}
 	
