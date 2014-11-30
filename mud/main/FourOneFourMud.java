@@ -58,9 +58,9 @@ class FourOneFourMud {
 		pool         = Executors.newFixedThreadPool(poolSize);
 		clients      = new LinkedList<Connection>();
 		/* fixme: actually make them different */
-		newbie       = new Commandset("Newbie");
-		common       = new Commandset("Common");
-		immortal     = new Commandset("Immortal");
+		newbie       = new Commandset(Commandset.Level.NEWBIE);
+		common       = new Commandset(Commandset.Level.COMMON);
+		immortal     = new Commandset(Commandset.Level.IMMORTAL);
 	}
 
 	/** Run the mud. */

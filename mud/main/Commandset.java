@@ -6,25 +6,33 @@ import java.lang.reflect.Method;
 
 /** Commands. eg, a connection has limited options (Newbie,) but once you have
  a body, you can do much more (Common) but some players be able to shutdown the
- mud (Immortal.)
+ mud (Immortal.) Very primitive.
 
  @author Neil */
 
 public class Commandset {
 
-	//public enum Level 
-	private final String name;
+	public enum Level { NEWBIE, COMMON, IMMORTAL }
+
+	private final Level level;
 	private final Map<String, Method> commands = new HashMap<String, Method>();
 
-	public Commandset(String name) {
+	/** Gets a Commandset appropriate to level.
+	 @param level
+		The level, Commandset.Level.{ NEWBIE, COMMON, IMMORTAL }. */
+	public Commandset(Level level) {
+		this.level = level;
 		Class<?> c = this.getClass();
-		this.name = name;
 		try {
-			//Method m = c.getMethod("say", String.class);
-			Method m = c.getDeclaredMethod("say", String.class);
-			commands.put("say", m);
-			//commands.put("say", Commandset.class.getMethod("say", Connection.class, String.class));
-			//commands.put("say", Commands.class.getMethod("say", Connection.class, String.class));
+			/* these are all levels */
+			switch(level) {
+				case IMMORTAL:
+				case COMMON:
+					break;
+				case NEWBIE:
+					commands.put("say", c.getDeclaredMethod("say", Connection.class, String.class));
+					break;
+			}
 		} catch (NoSuchMethodException e) {
 			System.err.print(this + ": " + e + "!\n");
 		}
@@ -32,63 +40,48 @@ public class Commandset {
 
 	/** This parses the string and runs it.
 	 @param cmd
-	 A command to parse.
-	 @return A method if the string was an actual command. */
-	public void interpret(final Connection c, final String cmd) {
-		System.err.print("Command::interpret: " + cmd + ".\n");
+		A command to parse. */
+	public void interpret(final Connection c, final String command) {
+		String cmd, arg;
+
+		//System.err.print(c + " running Command::interpret: " + command + ".\n");
+
+		/* break the string up */
+		int space = command.indexOf(' ');
+		if(space != -1) {
+			cmd = command.substring(0, space);
+			arg = command.substring(space + 1);
+		} else {
+			cmd = command;
+			arg = "";
+		}
+
+		/* parse */
 		Method run = commands.get(cmd);
+
+		/* run */
 		if(run == null) {
 			System.out.print("Huh? " + cmd + "\n");
 		} else {
 			try {
-				run.invoke(c, cmd);
+				/* null: static method; fixme: extend Connection */
+				run.invoke(null, c, arg);
 			} catch(Exception e) {
-				System.err.print("Can't do that: " + e + ".\n");
+				c.sendTo("Can't do that.\n");
+				System.err.print(c + " input '" + command + "' which: " + e + ".\n");
 			}
 		}
 	}
 
+	/** @return Synecdoche. */
 	public String toString() {
-		return "CommandSet " + name;
+		return "CommandSet " + level;
 	}
 
-	static void say(String l) {
-		System.out.print("Worked " + l + ".\n");
-	}
-/*	static void say(final Connection c, final String line) {
-		System.out.print(c + ": " + line + "\n");
-	}*/
-
-//	private static final Map<String, Method> commands = new HashMap<String, Method>();
-
-/*	static {
-		try {
-			commands.put("say", Commands.class.getMethod("say", Connection.class, String.class));
-		} catch (NoSuchMethodException e) {
-			System.err.print("Building command table: " + e + "!\n");
-		}
-	}
+	/** these are all the commands! */
 
 	static void say(final Connection c, final String line) {
 		System.out.print(c + ": " + line + "\n");
-	}*/
-
-	/** This parses the string and runs it.
-	 @param cmd
-		A command to parse.
-	 @return A method if the string was an actual command. */
-/*	public static void interpret(final Connection c, final String cmd) {
-		System.err.print("Command::interpret: " + cmd + ".\n");
-		Method run = commands.get(cmd);
-		if(run == null) {
-			System.out.print("Huh? " + cmd + "\n");
-		} else {
-			try {
-				run.invoke(c, cmd);
-			} catch(Exception e) {
-				System.err.print("Can't do that: " + e + ".\n");
-			}
-		}
-	}*/
+	}
 
 }
