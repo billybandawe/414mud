@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.LinkedList;
 
+import gameentities.Room;
+
 /** This is the entry-point for starting the mud and listening for connections.
  @author Neil */
 
@@ -17,6 +19,7 @@ class FourOneFourMud {
 	private static final int fibonacci20    = 6765;
 	private static final int maxConnections = 256;
 	private static final int sShutdownTime  = 20;
+	private static final String area        = "troter.area";
 
 	/** Starts up the mud and listens for connections.
 	 @param args
@@ -39,11 +42,9 @@ class FourOneFourMud {
 	private final ServerSocket    serverSocket;
 	private final ExecutorService pool;
 
-	private List<Connection> clients;
+	private List<Connection> clients = new LinkedList<Connection>();
 
-	private final Commandset newbie;
-	private final Commandset common;
-	private final Commandset immortal;
+	private Room centerOfUniverse;
 
 	/* fixme: whenStarted, name, connected, players, etc . . . */
 
@@ -56,10 +57,7 @@ class FourOneFourMud {
 		System.err.print("414Mud starting up.\n");
 		serverSocket = new ServerSocket(port);
 		pool         = Executors.newFixedThreadPool(poolSize);
-		clients      = new LinkedList<Connection>();
-		newbie       = new Commandset(Commandset.Level.NEWBIE);
-		common       = new Commandset(Commandset.Level.COMMON);
-		immortal     = new Commandset(Commandset.Level.IMMORTAL);
+		centerOfUniverse = load(area);
 	}
 
 	/** Run the mud. */
@@ -68,7 +66,7 @@ class FourOneFourMud {
 		try {
 			for( ; ; ) {
 				/* fixme! immortal -> newbie (makes testing difficult) */
-				Connection client = new Connection(serverSocket.accept(), this, immortal);
+				Connection client = new Connection(serverSocket.accept(), this);
 				clients.add(client);
 				pool.execute(client);
 			}
@@ -104,6 +102,12 @@ class FourOneFourMud {
 
 	}
 
+	/** Closes a connection. */
+	public void deleteClient(Connection c) {
+		System.err.print("trdhfg!!!!!!!!!!!!!!!");
+		//clients.delete(c);
+	}
+
 	/** closes the server; it will detect this, and shutdown */
 	public void shutdown() {
 		try {
@@ -116,6 +120,15 @@ class FourOneFourMud {
 	/** prints out the mud info */
 	public String toString() {
 		return "414Mud"; /* fixme: update as more info becomes available */
+	}
+
+	private Room load(String area) {
+		/* fixme */
+		return new Room();
+	}
+
+	public Room getUniverse() {
+		return this.centerOfUniverse;
 	}
 
 }

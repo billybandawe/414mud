@@ -10,7 +10,7 @@ public class GamePlayer extends GameStuff{
 	protected Money money;
 	private Connection connection;
 	protected String mood;
-	protected GameRoom currentRoom;
+	/*protected GameRoom currentRoom;*/
 	
 	public GamePlayer(Connection connection) {
 		this.level = 1;
@@ -27,7 +27,7 @@ public class GamePlayer extends GameStuff{
 		return this.connection;
 	}
 	
-	public void SetRoom(GameRoom newRoom) {
+	/*public void SetRoom(GameRoom newRoom) {
 		this.currentRoom.RemovePlayer(this);
 		
 		this.currentRoom = newRoom;
@@ -50,7 +50,7 @@ public class GamePlayer extends GameStuff{
 		}
 		ReceiveMessage(sb.toString());
 		
-	}
+	}*/
 	
 	public int GetLevel() {
 		return this.level;
@@ -60,9 +60,9 @@ public class GamePlayer extends GameStuff{
 		return this.level;
 	}
 	
-	public GameRoom GetCurrentRoom() {
+	/*public GameRoom GetCurrentRoom() {
 		return this.currentRoom;
-	}
+	}*/
 	
 	public void KillPlayer(String murderer) {
 		ReceiveMessage("You have been attacked and killed by " + murderer + "\n");

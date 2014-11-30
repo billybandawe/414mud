@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
 
+import gameentities.Player;
+
 /** Connections are the people connected to our mud; later we will build a
  character around them and put them in the game.
  @author Neil */
@@ -19,24 +21,27 @@ import java.lang.reflect.Method;
 public class Connection implements Runnable {
 
 	private static final int bufferSize = 80;
+	private static final Commandset newbie   = new Commandset(Commandset.Level.NEWBIE);
+	private static final Commandset common   = new Commandset(Commandset.Level.COMMON);
+	private static final Commandset immortal = new Commandset(Commandset.Level.IMMORTAL);
 
-	//private final Map<String, Method> commands = new HashMap<String, Method>();
-
-	private final Commandset commands;
 	private final Socket socket;
 	private final String name = Orcish.get();
 	private final FourOneFourMud mud;
-	private PrintWriter   out;
-	private BufferedReader in;
+	private Commandset commands;
+	private PrintWriter     out;
+	private BufferedReader   in;
 	private char buffer[];
+	private Player  player = null;
+	private boolean isExit = false;
 	/* fixme: ip */
 
 	/** Initalize the connection.
 	 @param socket
 		the client socket */
-	Connection(final Socket socket, final FourOneFourMud mud, final Commandset cs) {
+	Connection(final Socket socket, final FourOneFourMud mud) {
 		System.err.print(this + " initialising.\n");
-		this.commands = cs;
+		this.commands = newbie;
 		this.socket   = socket;
 		this.mud      = mud;
 		this.buffer   = new char[bufferSize];
@@ -58,20 +63,18 @@ public class Connection implements Runnable {
 
 			this.sendTo("You are " + this + ".");
 
-			while((input = this.getFrom()) != null) {
+			while(!isExit && (input = this.getFrom()) != null) {
 
-				if(input.length() == 0) break; /* <- they will be loged out */
+				if(input.length() == 0) continue;
 
 				//this.sendTo(this + " sent \"" + input + ".\"");
-
 				commands.interpret(this, input);
-				/* fixme: remove this by making the inerpret boolean */
-				if(input.compareToIgnoreCase("shutdown") == 0) {
-					break;
-				}
+
 			}
 
 			this.sendTo("Closing " + this + ".");
+			socket.close();
+			mud.deleteClient(this);
 
 		} catch(UnsupportedEncodingException e) {
 			System.err.print(this + " doesn't like UTF-8: " + e + ".\n");
@@ -81,6 +84,8 @@ public class Connection implements Runnable {
 			this.out = null;
 			this.in  = null;
 		}
+
+		System.err.print(this + " is not used.\n");
 	}
 
 	/** Send a message to the connection.
@@ -114,23 +119,6 @@ public class Connection implements Runnable {
 
 		return input;
 	}
-	
-	/** This parses the string and does stuff.
-	 @param cmd
-	 A command to parse. */
-	/*public void parse(final String cmd) {
-		System.err.print("Command::parse: " + cmd + ".\n");
-		Method run = commands.get(cmd);
-		if(run == null) {
-			System.out.print("Huh? " + cmd + "\n");
-		} else {
-			try {
-				run.invoke(this);
-			} catch(Exception e) {
-				System.err.print(this + " can't do that: " + e + ".\n");
-			}
-		}
-	}*/
 
 	public FourOneFourMud getMud() {
 		return mud;
@@ -139,9 +127,26 @@ public class Connection implements Runnable {
 	public String toString() {
 		return "Connection " + name;
 	}
-	
+
 	public String getName() {
 		return this.name;
+	}
+
+	public void setImmortal() {
+		commands = immortal;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player p) {
+		player = p;
+		commands = common;
+	}
+
+	public void setExit() {
+		isExit = true;
 	}
 
 }
