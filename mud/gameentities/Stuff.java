@@ -36,15 +36,15 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 		if(in != null) {
 			in.contents.remove(this);
 			in = null;
-			sendToRoom(this + " dissaperates!");
+			sendToRoom(this + " disapparates!");
 		}
 
 		/* appear somewhere else */
 		in = container;
 		container.contents.add(this);
-		sendToRoom(this + " reaperates dramatically!");
+		sendToRoom(this + " suddenly re-apparates dramatically!");
 
-		this.sendTo("You dissaperate and instantly travel to " + container + ".");
+		this.sendTo("You disapparated and instantly travel to " + container + ".");
 
 		//System.err.print(this + " in " + container + ".\n");
 	}
