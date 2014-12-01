@@ -17,8 +17,9 @@ import gameentities.Room;
 
 public class Commandset {
 
-	private static final int minName = 3;
-	private static final int maxName = 10;
+	private static final int minName  = 3;
+	private static final int maxName  = 8;
+	private static final int maxUpper = 2;
 
 	/* these are the commands! */
 	
@@ -49,6 +50,8 @@ public class Commandset {
 	}
 
 	private static void create(final Connection c, final String arg) {
+		/* this is where int, wis, are calculated; not that we have them */
+
 		int len = arg.length();
 		if(len < minName) {
 			c.sendTo("Your name must be at least " + minName + " characters.");
@@ -58,15 +61,37 @@ public class Commandset {
 			c.sendTo("Your name must be bounded by " + maxName + " characters.");
 			return;
 		}
+
+		boolean isUpper, isLastUpper = false;
+		boolean isFirst     = true;
+		int     upper       = 0;
+
 		for(char ch : arg.toCharArray()) {
-			c.sendTo("" + ch);
+			/*Character.isAlphabetic(), isTitleCase; <- sorry the rest of the world */
+			if(!Character.isLetter(ch)) {
+				c.sendTo("Your name can only be letters.");
+				return;
+			}
+			isUpper = !Character.isLowerCase(ch);
+			if(isUpper) upper++;
+			if(isFirst && !isUpper
+			   || isLastUpper && isUpper
+			   || upper > maxUpper) {
+				c.sendTo("Appropriate capitalisation please.");
+				return;
+			}
+			isFirst = false;
+			isLastUpper = isUpper;
 		}
+		/* fixme: compare file of bad names (like ***k and such) */
+		/* fixme: compare with other players! */
 
-		//Character.isLetter(str.charAt(i));
-
+		/* passed the grammar police */
 		Player p = new Player(c, arg);
-		c.sendTo("You create a character named " + arg + "!");
 		c.setPlayer(p);
+		System.err.print(c + " has created " + arg + ".\n");
+		c.sendTo("You create a character named " + arg + "!");
+
 		Room r = c.getMud().getUniverse();
 		p.placeIn(r);
 	}
@@ -109,10 +134,10 @@ public class Commandset {
 			c.sendTo("That's not the password.");
 			return;
 		}
-		System.err.print(c + " has ascended.\n");
-		p.sendToRoom("A glorious light surronds " + c + " as they ascend.");
-		c.sendTo("You are now an immotal; type help.");
+		p.sendToRoom("A glorious light surronds " + p + " as they ascend.");
 		c.setImmortal();
+		System.err.print(c + " has ascended.\n");
+		c.sendTo("You are now an immortal; type 'help' for new commands.");
 	}
 
 	/* this is the setup for dealing with them */
@@ -132,6 +157,8 @@ public class Commandset {
 		add("quit", "exit");
 		add("help", "help");
 		add("?", "help");
+
+		/* these are level-specific */
 		switch(level) {
 			case IMMORTAL:
 				add("shutdown", "shutdown");
@@ -139,16 +166,10 @@ public class Commandset {
 				add("look", "look");
 				add("say", "say");
 				add("chat", "cant"/*fixme*/);
-				add("ascend", "ascend");
+				if(level != Level.IMMORTAL) add("ascend", "ascend");
 				break;
 			case NEWBIE:
-				add("say",    "cant");
-				add("chat",   "cant");
 				add("create", "create");
-				/* debug */
-				add("shutdown", "shutdown");
-				/* fixme */
-				add("look", "look");
 				break;
 		}
 	}
@@ -185,7 +206,7 @@ public class Commandset {
 
 		/* run */
 		if(run == null) {
-			c.sendTo("Huh? " + cmd);
+			c.sendTo("Huh? " + cmd + " (use help for a list)");
 		} else {
 			try {
 				/* null: static method; extend Connection? nice try,

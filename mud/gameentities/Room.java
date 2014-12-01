@@ -25,7 +25,7 @@ public class Room extends Stuff {
 
 	@Override
 	public String lookDetailed() {
-		return "(" + name + ")" + line + "\n" + description;
+		return line + "\n" + description;
 	}
 
 }

@@ -63,7 +63,7 @@ public class Stuff /*implements Enumerate*/ {
 
 	/** gives more info */
 	public String look() {
-		return "(" + name + ")" + line;
+		return "(" + name + ") " + line;
 	}
 
 	/** gives more info */

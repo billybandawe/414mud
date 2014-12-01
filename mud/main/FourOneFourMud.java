@@ -114,7 +114,7 @@ class FourOneFourMud {
 
 	/** Closes a connection. */
 	public void deleteClient(Connection c) {
-		System.err.print(c + " is closed: " + c.getSocket().isClosed() + "; removing from Mud.\n");
+		System.err.print(c + " is closed: " + c.getSocket().isClosed() + "; removing from " + name + ".\n");
 		clients.remove(c);
 	}
 
