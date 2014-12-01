@@ -1,16 +1,12 @@
 package gameentities;
 
-import java.util.List;
-import java.util.LinkedList;
-
 public class Character extends Stuff {
 
 	/* fixme: have alignment, aggresive, plug into formula */
 	public int totalhp;
 	public int hp;
-	public int level;
+	public int level; /* fixme: not used */
 	public int money;
-	public List<Stuff> carrying = new LinkedList<Stuff>();
 
 	public Character() {
 		super();
@@ -22,7 +18,10 @@ public class Character extends Stuff {
 		name = "someone";
 	}
 
-	/*public kill() {
-		//("You have been attacked and killed by " + murderer + "\n");
-	}*/
+	/* fixme; put in Stuff.class */
+	public kill(Stuff murderer) {
+		murderer.sendTo("You have slain " + this + "!");
+		murderer.sendToRoom(this + " has been attacked and killed by " + murderer + ".");
+	}
+
 }
