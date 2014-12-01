@@ -148,4 +148,8 @@ class FourOneFourMud {
 		return p.compareTo(password) == 0;
 	}
 
+	public List<Connection> getClients() {
+		return clients;
+	}
+
 }

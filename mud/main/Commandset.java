@@ -3,8 +3,9 @@ package main;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.io.IOException;
 
-//import java.net.Socket; /* for Connection */
 import gameentities.Stuff;
 import gameentities.Player;
 import gameentities.Room;
@@ -43,6 +44,17 @@ public class Commandset {
 		System.out.print(c + ": " + arg + "\n");
 		/* fixme: say to room! */
 		c.sendTo(c + ": " + arg);
+	}
+
+	private static void chat(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		String s = p + ": " + arg;
+		List<Connection> list = c.getMud().getClients();
+		for(Connection everyone : list) {
+			if(c == everyone) continue;
+			c.sendTo(s);
+		}
 	}
 
 	private static void cant(final Connection c, final String arg) {
@@ -115,11 +127,29 @@ public class Commandset {
 	}
 
 	private static void shutdown(final Connection c, final String arg) {
+
 		if(arg.length() != 0) {
 			c.sendTo("Command takes no arguments.");
 			return;
 		}
+
+		Player p = c.getPlayer();
+		if(p == null) return;
+
 		System.out.print(c + " initated shutdown.\n");
+
+		String s = p + " initiated shutdown!";
+		List<Connection> list = c.getMud().getClients();
+		for(Connection everyone : list) {
+			everyone.sendTo(s);
+			everyone.setExit(); /* doesn't work -- Connection stuck waiting */
+			try {
+				everyone.getSocket().close();
+			} catch(IOException e) {
+				System.err.print(everyone + " just wouldn't close: " + e + ".\n");
+			}
+		}
+
 		c.setExit();
 		c.getMud().shutdown();
 	}
@@ -164,8 +194,11 @@ public class Commandset {
 				add("shutdown", "shutdown");
 			case COMMON:
 				add("look", "look");
-				add("say", "say");
-				add("chat", "cant"/*fixme*/);
+				add("l",    "look");
+				add("say",  "say");
+				add("'",    "say");
+				add("chat", "chat");
+				add(".",    "chat");
 				if(level != Level.IMMORTAL) add("ascend", "ascend");
 				break;
 			case NEWBIE:
