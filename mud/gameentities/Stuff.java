@@ -44,7 +44,7 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 		container.contents.add(this);
 		sendToRoom(this + " suddenly re-apparates dramatically!");
 
-		this.sendTo("You disapparated and instantly travel to " + container + ".");
+		this.sendTo("You disapparate and instantly travel to " + container + ".");
 
 		//System.err.print(this + " in " + container + ".\n");
 	}
