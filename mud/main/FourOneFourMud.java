@@ -133,7 +133,8 @@ class FourOneFourMud {
 	}
 
 	private Room load(String area) {
-		/* fixme */
+		//////////////////////////////////////////////
+		/* fixme: Map<String, Stuff> load() */ //<---
 		return new Room();
 	}
 

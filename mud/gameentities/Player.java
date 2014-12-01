@@ -32,7 +32,12 @@ public class Player extends Character {
 		
 		
 	}*/
-	
+
+	@Override
+	public void sendTo(final String message) {
+		connection.sendTo(message);
+	}
+
 	@Override
 	protected Connection getConnection() {
 		return connection;
