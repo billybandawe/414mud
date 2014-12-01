@@ -1,6 +1,7 @@
 package main;
 
 import java.net.Socket;
+import java.net.SocketException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -78,6 +79,10 @@ public class Connection implements Runnable {
 
 		} catch(UnsupportedEncodingException e) {
 			System.err.print(this + " doesn't like UTF-8: " + e + ".\n");
+		} catch(SocketException e) {
+			/* this is usual: input is blocked on the socket, so we close the
+			 socket to signal that we're done */
+			System.err.print(this + " shutting down.\n");
 		} catch(IOException e) {
 			System.err.print(this + ": " + e + ".\n");
 		} finally {

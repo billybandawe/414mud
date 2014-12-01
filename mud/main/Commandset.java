@@ -41,9 +41,11 @@ public class Commandset {
 	}
 
 	private static void say(final Connection c, final String arg) {
-		System.out.print(c + ": " + arg + "\n");
-		/* fixme: say to room! */
-		c.sendTo(c + ": " + arg);
+		Player p = c.getPlayer();
+		if(p == null) return;
+		//System.out.print(c + ": " + arg + "\n");
+		c.sendTo("You say, \"" + arg + "\"");
+		p.sendToRoom(p + " says \"" + arg + "\"");
 	}
 
 	private static void chat(final Connection c, final String arg) {

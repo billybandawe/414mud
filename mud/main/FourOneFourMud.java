@@ -81,9 +81,9 @@ class FourOneFourMud {
 				pool.execute(client);
 			}
 		} catch(SocketException e) {
-			/* this occurs if the serverSocket is closed; fixme: yes, this is
-			 how we shut it down :[ */
-			System.err.print("Shutting down.\n");
+			/* this occurs if the serverSocket is closed; yes, this is how we
+			 shut it down :[ */
+			System.err.print(this + " shutting down.\n");
 		} catch(IOException e) {
 			System.err.print("Shutting down: " + e + ".\n");
 		} finally {
