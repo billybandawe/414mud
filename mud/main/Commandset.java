@@ -51,11 +51,11 @@ public class Commandset {
 	private static void chat(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
-		String s = p + ": " + arg;
+		String s = "[chat] " + p + ": " + arg;
 		List<Connection> list = c.getMud().getClients();
 		for(Connection everyone : list) {
-			if(c == everyone) continue;
-			c.sendTo(s);
+			//if(c == everyone) continue; <- echo to ones self is useful
+			everyone.sendTo(s);
 		}
 	}
 
