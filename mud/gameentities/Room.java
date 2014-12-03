@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 public class Room extends Stuff {
 
-	public String description;
-	public Room n, e, s, w, u, d;
+	private String description;
+	private Room n, e, s, w, u, d;
 
 	public Room() {
 		super();
@@ -15,13 +15,15 @@ public class Room extends Stuff {
 		name        = "room";
 	}
 
-	/*public void put(Stuff s) {
-		contents.add(s);
-	}*/
-
-	/*void setDescription(String description) {
+	public void SetN(Room r) { n = r; }
+	public void SetE(Room r) { e = r; }
+	public void SetS(Room r) { s = r; }
+	public void SetW(Room r) { w = r; }
+	public void SetU(Room r) { u = r; }
+	public void SetD(Room r) { d = r; }
+	public void setDescription(String description) {
 		this.description = description;
-	}*/
+	}
 
 	@Override
 	public String lookDetailed() {

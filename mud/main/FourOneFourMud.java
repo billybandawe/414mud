@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import gameentities.Room;
+//import gameentities.Stuff;
 
 /** This is the entry-point for starting the mud and listening for connections.
  @author Neil */
@@ -55,7 +56,7 @@ class FourOneFourMud {
 
 	private Room centerOfUniverse;
 
-	/* fixme: whenStarted, name, connected, players, etc . . . */
+	/* fixme: whenStarted, name-done, connected-done, players-done, etc . . . */
 
 	/** The entire mud constructor.
 	 @param port
@@ -135,7 +136,9 @@ class FourOneFourMud {
 	private Room load(String area) {
 		//////////////////////////////////////////////
 		/* fixme: Map<String, Stuff> load() */ //<---
-		return new Room();
+		Room center = new Room();
+		Room north  = new Room();
+		return center;
 	}
 
 	public Room getUniverse() {

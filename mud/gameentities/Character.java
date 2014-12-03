@@ -19,7 +19,7 @@ public class Character extends Stuff {
 	}
 
 	/* fixme; put in Stuff.class */
-	public kill(Stuff murderer) {
+	public void kill(Stuff murderer) {
 		murderer.sendTo("You have slain " + this + "!");
 		murderer.sendToRoom(this + " has been attacked and killed by " + murderer + ".");
 	}

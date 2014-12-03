@@ -7,11 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.IOException;
 import java.io.ObjectStreamException;
+import java.util.Iterator;
 
 import main.Connection;
 
-/* definately should have Enum, Serializ is for binary file mostly, I think */
-public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
+/* Serializ is for binary file mostly, I think */
+public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 
 	//private static int vnumCounter = 0;
 
@@ -53,6 +54,7 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 		return in;
 	}
 
+	/** Overwrote on things that have a connection. */
 	public void sendTo(final String message) {
 	}
 
@@ -62,14 +64,14 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 	}
 
 	private void sendToContentsExcept(final Stuff except, final String message) {
-		for(Stuff s : this.contents) {
+		for(Stuff s : this) {
 			if(s == except) continue;
 			s.sendTo(message);
 		}
 	}
 
 	public void sendToContents(final String message) {
-		for(Stuff s : this.contents) s.sendTo(message);
+		for(Stuff s : this) s.sendTo(message);
 	}
 
 	/** @return The connection, if there is one, otherwise null. */
@@ -92,7 +94,12 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 	}
 
 	public List<Stuff> getContents() {
+		for(Stuff i : this/*.getContentsIterator()*/) System.out.print("h");
 		return contents;
+	}
+
+	public Iterator<Stuff> iterator() {
+		return contents.iterator();
 	}
 
 	/** Prints all the data so it will be serialisable (but in text, not binary.) */
@@ -100,4 +107,5 @@ public class Stuff /*implements Enumerate*/ /*implements Serializable*/ {
 		////////////////////////////////////////
 		return ""; //<------
 	}
+
 }
