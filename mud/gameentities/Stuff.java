@@ -19,8 +19,8 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 
 	//public int vnum;
 	/*public List<String> name = new LinkedList<String>(); <- only one name is fine */
-	public String name;
-	public String line;
+	protected String name;
+	protected String line;
 
 	protected List<Stuff> contents = new LinkedList<Stuff>();
 	protected Stuff in;
@@ -32,10 +32,23 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		line = "some stuff is here";
 	}
 
+	public void setName(final String name) {
+		String old = this.name;
+		this.name = name;
+		sendToRoom("The '" + old + "' is now known as '" + this + ".'");
+		sendTo("You will not be called '" + old + ";' I dub thee '" + this + ".'");
+	}
+
+	public void setLine(final String line) {
+		this.line = line;
+		sendToRoom(this + " is now '" + line + ".'");
+		sendTo("You are '" + line + ".'");
+	}
+
 	public void transportTo(final Stuff container) {
 		if(in != null) sendToRoom(this + " disapparates!");
 		placeIn(container);
-		this.sendTo("You disapparate and instantly travel to " + container + ".");
+		sendTo("You disapparate and instantly travel to '" + container + ".'");
 		sendToRoom(this + " suddenly re-apparates dramatically!");
 	}
 
@@ -52,6 +65,8 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 
 		//System.err.print(this + " in " + container + ".\n");
 	}
+
+	public void lookAtStuff() { }
 
 	public Stuff getIn() {
 		return in;

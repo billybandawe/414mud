@@ -108,24 +108,26 @@ public class Commandset {
 
 		Room r = c.getMud().getUniverse();
 		p.transportTo(r);
+		p.lookAtStuff();
 	}
-
+	
 	private static void look(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) {
 			c.sendTo("You don't have eyes yet.");
 			return;
 		}
+
+		/* look at the room (Stuff in) */
 		Stuff surround = p.getIn();
 		if(surround == null) {
 			c.sendTo("You are floating in space.");
 			return;
 		}
 		c.sendTo(surround.lookDetailed());
-		for(Stuff s : surround) {
-			if(p == s) continue;
-			c.sendTo(s.look());
-		}
+
+		/* look at the Stuff */
+		p.lookAtStuff();
 	}
 
 	private static void shutdown(final Connection c, final String arg) {
@@ -176,36 +178,42 @@ public class Commandset {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.N);
+		p.lookAtStuff();
 	}
 
 	private static void east(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.E);
+		p.lookAtStuff();
 	}
 
 	private static void south(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.S);
+		p.lookAtStuff();
 	}
 
 	private static void west(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.W);
+		p.lookAtStuff();
 	}
 
 	private static void up(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.U);
+		p.lookAtStuff();
 	}
 
 	private static void down(final Connection c, final String arg) {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.D);
+		p.lookAtStuff();
 	}
 
 	/* this is the setup for dealing with them */

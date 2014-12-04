@@ -31,6 +31,15 @@ public class Player extends Character {
 		sendToRoom(this + " walks in from " + where.getBack() + ".");
 	}
 
+	@Override
+	public void lookAtStuff() {
+		if(in == null) return;
+		for(Stuff s : in) {
+			if(s == this) continue;
+			connection.sendTo(s.look());
+		}
+	}
+
 /*	public void kill(Stuff murderer) {
 		ReceiveMessage("You have been attacked and killed by " + murderer + "\n");
 		
