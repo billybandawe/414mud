@@ -228,6 +228,15 @@ public class Commandset {
 		p.lookAtStuff();
 	}
 
+	private static void who(final Connection c, final String arg) {
+		Player p;
+		c.sendTo("Active connections:");
+		for(Connection who : c.getMud()) {
+			p = who.getPlayer();
+			c.sendTo(who + " (" + (p != null ? p.getName() : "not in game") + ")");
+		}
+	}
+
 	/* this is the setup for dealing with them */
 
 	public enum Level { NEWBIE, COMMON, IMMORTAL }
@@ -245,6 +254,7 @@ public class Commandset {
 		add("quit", "exit");
 		add("help", "help");
 		add("?", "help");
+		add("who", "who");
 
 		/* these are level-specific */
 		switch(level) {

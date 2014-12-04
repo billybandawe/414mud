@@ -8,14 +8,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Iterator;
 
 import gameentities.Room;
 import gameentities.Object;
+import main.Connection;
 
 /** This is the entry-point for starting the mud and listening for connections.
  @author Neil */
 
-class FourOneFourMud {
+class FourOneFourMud implements Iterable<Connection> {
 
 	private static final int fibonacci20    = 6765;
 	private static final int maxConnections = 256;
@@ -136,6 +138,15 @@ class FourOneFourMud {
 	private Room load(String area) {
 		//////////////////////////////////////////////
 		/* fixme: Map<String, Stuff> load() */ //<---
+		Room a = new Room("name", "Desc", "Long");
+		Room b = new Room("name", "Desc", "Long");
+		Room c = new Room("name", "Desc", "Long");
+		Room d = new Room("name", "Desc", "Long");
+		Room e = new Room("name", "Desc", "Long");
+		Room f = new Room("name", "Desc", "Long");
+		Room g = new Room("name", "Desc", "Long");
+		Room h = new Room("name", "Desc", "Long");
+		Room i = new Room("name", "Desc", "Long");
 		Room center = new Room();
 		center.setName("centre");
 		center.setTitle("The Center Room");
@@ -168,4 +179,9 @@ class FourOneFourMud {
 	public String getName() {
 		return name;
 	}
+	
+	public Iterator<Connection> iterator() {
+		return clients.iterator();
+	}
+
 }

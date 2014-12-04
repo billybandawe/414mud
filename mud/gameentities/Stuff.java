@@ -50,10 +50,10 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 	}
 
 	public void transportTo(final Stuff container) {
-		if(in != null) sendToRoom(this + " disapparates!");
+		if(in != null) sendToRoom(this + " disapparates.");
 		placeIn(container);
 		sendTo("You disapparate and instantly travel to '" + container.title + "'");
-		sendToRoom(this + " suddenly re-apparates dramatically!");
+		sendToRoom(this + " suddenly re-apparates.");
 	}
 
 	protected void placeIn(Stuff container) {

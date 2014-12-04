@@ -71,6 +71,13 @@ public class Room extends Stuff {
 		description = "This is an entrely bland room.";
 	}
 
+	public Room(final String name, final String title, final String desc) {
+		super();
+		this.name        = name;
+		this.title       = title;
+		this.description = desc;
+	}
+
 	public void setDirection(Direction dir, Room target) {
 		/* also a hack :[ */
 		switch(dir) {
