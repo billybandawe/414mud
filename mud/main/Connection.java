@@ -41,11 +41,11 @@ public class Connection implements Runnable {
 	 @param socket
 		the client socket */
 	Connection(final Socket socket, final FourOneFourMud mud) {
-		System.err.print(this + " has connected to " + mud + ".\n");
 		this.commands = newbie;
 		this.socket   = socket;
 		this.mud      = mud;
 		this.buffer   = new char[bufferSize];
+		System.err.print(this + " has connected to " + mud + ".\n");
 	}
 
 	/** The server-side handler for connections. */
@@ -62,6 +62,9 @@ public class Connection implements Runnable {
 			this.out = out;
 			this.in  = in;
 
+			System.err.print("Sending MOTD to " + this + ".\n");
+			this.sendTo(mud.getMotd());
+			this.sendTo("");
 			this.sendTo(mud.getName() + ": you are " + this + "; type 'create <Character>' to start.");
 
 			while(!isExit && (input = this.getFrom()) != null) {
