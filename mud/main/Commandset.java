@@ -124,10 +124,22 @@ public class Commandset {
 			c.sendTo("You are floating in space.");
 			return;
 		}
-		c.sendTo(surround.lookDetailed());
-
-		/* look at the Stuff */
-		p.lookAtStuff();
+		if(arg.length() > 0) {
+			int count = 0;
+			/* look at things */
+			for(Stuff stuff : surround) {
+				if(arg.equals(stuff.getName())) {
+					c.sendTo(stuff.look());
+					count++;
+				}
+			}
+			/* fixme: look at exits */
+			if(count == 0) c.sendTo("There is no '" + arg + "' here.");
+		} else {
+			c.sendTo(surround.lookDetailed());
+			/* look at the Stuff */
+			p.lookAtStuff();
+		}
 	}
 
 	private static void shutdown(final Connection c, final String arg) {

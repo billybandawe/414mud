@@ -45,6 +45,10 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		sendTo("You are '" + title + ".'");
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void transportTo(final Stuff container) {
 		if(in != null) sendToRoom(this + " disapparates!");
 		placeIn(container);

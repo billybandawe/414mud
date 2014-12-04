@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import gameentities.Room;
-//import gameentities.Stuff;
+import gameentities.Object;
 
 /** This is the entry-point for starting the mud and listening for connections.
  @author Neil */
@@ -20,7 +20,7 @@ class FourOneFourMud {
 	private static final int fibonacci20    = 6765;
 	private static final int maxConnections = 256;
 	private static final int sShutdownTime  = 20;
-	private static final String area        = "troter.area";
+	private static final String area        = "troter.area"; /* fixme */
 	private static final String name        = "414Mud";
 
 	private static String password;
@@ -139,10 +139,14 @@ class FourOneFourMud {
 		Room center = new Room();
 		center.setName("centre");
 		center.setTitle("The Center Room");
+		center.setDescription("The Center room.");
 		Room north  = new Room();
 		north.setName("north");
 		north.setTitle("The North Room");
+		north.setDescription("The Center room.");
 		center.connectDirection(Room.Direction.N, north);
+		Object object = new Object();
+		object.transportTo(center);
 		return center;
 	}
 
