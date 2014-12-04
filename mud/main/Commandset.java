@@ -187,44 +187,63 @@ public class Commandset {
 	}
 
 	private static void north(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.N);
+		//c.sendTo(p.look());
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 
 	private static void east(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.E);
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 
 	private static void south(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.S);
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 
 	private static void west(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.W);
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 
 	private static void up(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.U);
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 
 	private static void down(final Connection c, final String arg) {
+		Stuff in;
 		Player p = c.getPlayer();
 		if(p == null) return;
 		p.go(Room.Direction.D);
+		if((in = p.getIn()) == null) return;
+		c.sendTo(in.look());
 		p.lookAtStuff();
 	}
 

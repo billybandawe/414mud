@@ -17,4 +17,12 @@ public class Object extends Stuff {
 		//name.add("object");
 	}
 
+	public Object(final String name, final String title, final boolean isB, final boolean isT) {
+		super();
+		this.name = name;
+		this.title = title;
+		isBreakable = isB;
+		isTransportable = isT;
+	}
+
 }

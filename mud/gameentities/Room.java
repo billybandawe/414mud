@@ -99,7 +99,7 @@ public class Room extends Stuff {
 
 	@Override
 	public String lookDetailed() {
-		return title + "\n" + description + "\nexits [ "
+		return "(" + name + ") " + title + "\n" + description + "\nexits [ "
 		+ (n != null ? "n " : "")
 		+ (e != null ? "e " : "")
 		+ (s != null ? "s " : "")

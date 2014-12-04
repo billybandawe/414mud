@@ -10,4 +10,12 @@ public class NPC extends Character {
 		title = "Someone is looking confused.";
 	}
 
+	public NPC(final String name, final String title, final boolean isF, final boolean isX) {
+		super();
+		this.name = name;
+		this.title = title;
+		isFriendly = isF;
+		isXeno = isX;
+	}
+
 }
