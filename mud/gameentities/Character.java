@@ -13,9 +13,8 @@ public class Character extends Stuff {
 		totalhp = hp = 50;
 		level = 1;
 		money = 50;
-		line  = "someone is chilling";
-		//name.add("someone");
 		name = "someone";
+		title= "Someone is chilling.";
 	}
 
 	/* fixme; put in Stuff.class */

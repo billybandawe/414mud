@@ -19,8 +19,8 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 
 	//public int vnum;
 	/*public List<String> name = new LinkedList<String>(); <- only one name is fine */
-	protected String name;
-	protected String line;
+	protected String name;  /* lower case */
+	protected String title; /* sentence case */
 
 	protected List<Stuff> contents = new LinkedList<Stuff>();
 	protected Stuff in;
@@ -28,8 +28,8 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 	Stuff() {
 		//vnum = ++vnumCounter;
 		//name.add("stuff");
-		name = "stuff";
-		line = "some stuff is here";
+		name  = "stuff";
+		title = "Some stuff is here.";
 	}
 
 	public void setName(final String name) {
@@ -39,16 +39,16 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		sendTo("You will not be called '" + old + ";' I dub thee '" + this + ".'");
 	}
 
-	public void setLine(final String line) {
-		this.line = line;
-		sendToRoom(this + " is now '" + line + ".'");
-		sendTo("You are '" + line + ".'");
+	public void setTitle(final String line) {
+		this.title = title;
+		sendToRoom(this + " is now '" + title + ".'");
+		sendTo("You are '" + title + ".'");
 	}
 
 	public void transportTo(final Stuff container) {
 		if(in != null) sendToRoom(this + " disapparates!");
 		placeIn(container);
-		sendTo("You disapparate and instantly travel to '" + container + ".'");
+		sendTo("You disapparate and instantly travel to '" + container.title + "'");
 		sendToRoom(this + " suddenly re-apparates dramatically!");
 	}
 
@@ -103,7 +103,7 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 
 	/** gives more info */
 	public String look() {
-		return "(" + name + ") " + line;
+		return "(" + name + ") " + title;
 	}
 
 	/** gives more info */

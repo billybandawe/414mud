@@ -62,7 +62,7 @@ public class Connection implements Runnable {
 			this.out = out;
 			this.in  = in;
 
-			this.sendTo("You are " + this + "; type 'create <Character>' to start.");
+			this.sendTo(mud.getName() + ": you are " + this + "; type 'create <Character>' to start.");
 
 			while(!isExit && (input = this.getFrom()) != null) {
 

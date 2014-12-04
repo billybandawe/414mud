@@ -10,9 +10,8 @@ public class Player extends Character {
 	public Player(Connection connection, String name) {
 		super();
 		this.connection = connection;
-		this.line = name + " is neutral.";
-		//this.name.add(name);
-		this.name = name;
+		this.name  = name;
+		this.title = name + " is neutral.";
 	}
 
 	public void go(Room.Direction where) {

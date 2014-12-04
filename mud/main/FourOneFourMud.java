@@ -138,10 +138,10 @@ class FourOneFourMud {
 		/* fixme: Map<String, Stuff> load() */ //<---
 		Room center = new Room();
 		center.setName("centre");
-		center.setLine("the center room");
+		center.setTitle("The Center Room");
 		Room north  = new Room();
 		north.setName("north");
-		north.setLine("the north room");
+		north.setTitle("The North Room");
 		center.connectDirection(Room.Direction.N, north);
 		return center;
 	}
@@ -161,4 +161,7 @@ class FourOneFourMud {
 		return clients;
 	}
 
+	public String getName() {
+		return name;
+	}
 }

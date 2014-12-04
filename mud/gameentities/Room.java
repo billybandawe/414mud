@@ -10,8 +10,6 @@ public class Room extends Stuff {
 	protected String description;
 	protected Room n, e, s, w, u, d;
 
-	static Room room = new Room();
-
 	/* I love and hate Java */
 	public enum Direction {
 		N("north"), E("east"), S("south"), W("west"), U("up"), D("down");
@@ -68,9 +66,9 @@ public class Room extends Stuff {
 
 	public Room() {
 		super();
-		description = "This is an entrely bland room.";
-		line        = "a room";
 		name        = "room";
+		title       = "A room.";
+		description = "This is an entrely bland room.";
 	}
 
 	public void setDirection(Direction dir, Room target) {
@@ -94,7 +92,7 @@ public class Room extends Stuff {
 
 	@Override
 	public String lookDetailed() {
-		return line + "\n" + description + "\nexits [ "
+		return title + "\n" + description + "\nexits [ "
 		+ (n != null ? "n " : "")
 		+ (e != null ? "e " : "")
 		+ (s != null ? "s " : "")

@@ -11,10 +11,10 @@ public class Container extends Object {
 	public Container() {
 		super();
 		massLimit = 10;
-		line            = "some sort of container is here";
-		/* name.clear() ? */
-		/*name.add("container");*/
 		name = "container";
+		title= "Some sort of container is here.";
+		/* name.clear() */
+		/*name.add("container");*/
 	}
 
 }

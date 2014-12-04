@@ -11,10 +11,10 @@ public class Object extends Stuff {
 		isBreakable     = false;
 		isTransportable = false;
 		mass            = 1;
-		line            = "some sort of object is here";
+		name  = "object";
+		title = "Some sort of object is here.";
 		/* name.clear() ? */
 		//name.add("object");
-		name = "object";
 	}
 
 }
