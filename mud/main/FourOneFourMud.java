@@ -137,7 +137,10 @@ class FourOneFourMud {
 		//////////////////////////////////////////////
 		/* fixme: Map<String, Stuff> load() */ //<---
 		Room center = new Room();
+		center.name = "centre"; /* fixme: lazy */
 		Room north  = new Room();
+		north.name  = "north";
+		center.connectDirection(Room.Direction.N, north);
 		return center;
 	}
 

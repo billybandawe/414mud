@@ -1,10 +1,11 @@
 package gameentities;
 
 import main.Connection;
+import gameentities.Room;
 
 public class Player extends Character {
 
-	public Connection connection;
+	protected Connection connection;
 
 	public Player(Connection connection, String name) {
 		super();
@@ -12,6 +13,22 @@ public class Player extends Character {
 		this.line = name + " is neutral.";
 		//this.name.add(name);
 		this.name = name;
+	}
+
+	public void go(Room.Direction where) {
+		if(in == null) {
+			sendTo("Can't do that; you are floating in space.");
+			return;
+		}
+		Room target = in.getRoom(where);
+		if(target == null) {
+			sendTo("You can't go that way.");
+			return;
+		}
+		sendToRoom(this + " walks " + where + ".");
+		sendTo("You walk " + where + ".");
+		placeIn(target);
+		sendToRoom(this + " walks in from " + where.getBack() + ".");
 	}
 
 /*	public void kill(Stuff murderer) {

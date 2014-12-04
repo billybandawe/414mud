@@ -10,6 +10,7 @@ import java.io.ObjectStreamException;
 import java.util.Iterator;
 
 import main.Connection;
+import gameentities.Room.Direction;
 
 /* Serializ is for binary file mostly, I think */
 public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
@@ -21,8 +22,8 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 	public String name;
 	public String line;
 
-	private List<Stuff> contents = new LinkedList<Stuff>();
-	private Stuff in;
+	protected List<Stuff> contents = new LinkedList<Stuff>();
+	protected Stuff in;
 
 	Stuff() {
 		//vnum = ++vnumCounter;
@@ -31,21 +32,23 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		line = "some stuff is here";
 	}
 
-	public void placeIn(Stuff container) {
+	public void transportTo(final Stuff container) {
+		if(in != null) sendToRoom(this + " disapparates!");
+		placeIn(container);
+		this.sendTo("You disapparate and instantly travel to " + container + ".");
+		sendToRoom(this + " suddenly re-apparates dramatically!");
+	}
 
+	protected void placeIn(Stuff container) {
 		/* it's already in something */
 		if(in != null) {
 			in.contents.remove(this);
 			in = null;
-			sendToRoom(this + " disapparates!");
 		}
 
 		/* appear somewhere else */
 		in = container;
 		container.contents.add(this);
-		sendToRoom(this + " suddenly re-apparates dramatically!");
-
-		this.sendTo("You disapparate and instantly travel to " + container + ".");
 
 		//System.err.print(this + " in " + container + ".\n");
 	}
@@ -93,14 +96,12 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		return look();
 	}
 
-	public List<Stuff> getContents() {
-		for(Stuff i : this/*.getContentsIterator()*/) System.out.print("h");
-		return contents;
-	}
-
 	public Iterator<Stuff> iterator() {
 		return contents.iterator();
 	}
+
+	/* @return Null since there is no directions (overwriten in Room) */
+	protected Room getRoom(Direction dir) { return null; }
 
 	/** Prints all the data so it will be serialisable (but in text, not binary.) */
 	public String saveString() {

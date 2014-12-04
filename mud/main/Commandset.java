@@ -107,7 +107,7 @@ public class Commandset {
 		c.sendTo("You create a character named " + arg + "!");
 
 		Room r = c.getMud().getUniverse();
-		p.placeIn(r);
+		p.transportTo(r);
 	}
 
 	private static void look(final Connection c, final String arg) {
@@ -122,7 +122,7 @@ public class Commandset {
 			return;
 		}
 		c.sendTo(surround.lookDetailed());
-		for(Stuff s : surround.getContents()) {
+		for(Stuff s : surround) {
 			if(p == s) continue;
 			c.sendTo(s.look());
 		}
@@ -172,6 +172,42 @@ public class Commandset {
 		c.sendTo("You are now an immortal; type 'help' for new commands.");
 	}
 
+	private static void north(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.N);
+	}
+
+	private static void east(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.E);
+	}
+
+	private static void south(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.S);
+	}
+
+	private static void west(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.W);
+	}
+
+	private static void up(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.U);
+	}
+
+	private static void down(final Connection c, final String arg) {
+		Player p = c.getPlayer();
+		if(p == null) return;
+		p.go(Room.Direction.D);
+	}
+
 	/* this is the setup for dealing with them */
 
 	public enum Level { NEWBIE, COMMON, IMMORTAL }
@@ -202,6 +238,18 @@ public class Commandset {
 				add("chat", "chat");
 				add(".",    "chat");
 				if(level != Level.IMMORTAL) add("ascend", "ascend");
+				add("n",    "north");
+				add("e",    "east");
+				add("s",    "south");
+				add("w",    "west");
+				add("u",    "up");
+				add("d",    "down");
+				add("north","north");
+				add("east", "east");
+				add("south","south");
+				add("west", "west");
+				add("up",   "up");
+				add("down", "down");
 				break;
 			case NEWBIE:
 				add("create", "create");
