@@ -52,8 +52,7 @@ public class Commandset {
 		Player p = c.getPlayer();
 		if(p == null) return;
 		String s = "[chat] " + p + ": " + arg;
-		List<Connection> list = c.getMud().getClients();
-		for(Connection everyone : list) {
+		for(Connection everyone : c.getMud()) {
 			//if(c == everyone) continue; <- echo to ones self is useful
 			everyone.sendTo(s);
 		}
@@ -155,8 +154,7 @@ public class Commandset {
 		System.out.print(c + " initated shutdown.\n");
 
 		String s = p + " initiated shutdown!";
-		List<Connection> list = c.getMud().getClients();
-		for(Connection everyone : list) {
+		for(Connection everyone : c.getMud()) {
 			everyone.sendTo(s);
 			everyone.setExit(); /* doesn't work -- Connection stuck waiting */
 			try {
@@ -315,7 +313,9 @@ public class Commandset {
 	}
 
 	/** This parses the string and runs it.
-	 @param cmd
+	 @param c
+		The connection that's attributed the command.
+	 @param command
 		A command to parse. */
 	public void interpret(final Connection c, final String command) {
 		String cmd, arg;

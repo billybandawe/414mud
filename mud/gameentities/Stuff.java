@@ -76,8 +76,10 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		return in;
 	}
 
-	/** Overwrote on things that have a connection. */
-	public void sendTo(final String message) {
+	/** Overwrote on things that have a connection.
+	 @param message
+		The string to send; no newline. */
+	protected void sendTo(final String message) {
 	}
 
 	public void sendToRoom(final String message) {
@@ -101,30 +103,34 @@ public class Stuff implements Iterable<Stuff> /*, Serializable*/ {
 		return null;
 	}
 
+	/** @return How the object looks very simply. */
 	public String toString() {
 		return name;
 	}
 
-	/** gives more info */
+	/** Gives more info.
+	 @return More info on the object. */
 	public String look() {
 		return "(" + name + ") " + title;
 	}
 
-	/** gives more info */
+	/** Gives detailed info.
+	 @return String info. */
 	public String lookDetailed() {
 		return look();
 	}
 
+	/** @return Iterate over the contents. */
 	public Iterator<Stuff> iterator() {
 		return contents.iterator();
 	}
 
-	/* @return Null since there is no directions (overwriten in Room) */
+	/* @return Null since there is no directions (overwriten in Room.) */
 	protected Room getRoom(Direction dir) { return null; }
 
-	/** Prints all the data so it will be serialisable (but in text, not binary.) */
+	/** Prints all the data so it will be serialisable (but in text, not binary.)
+	 @return Blank string; fixme: the serialised version. */
 	public String saveString() {
-		////////////////////////////////////////
 		return ""; //<------
 	}
 

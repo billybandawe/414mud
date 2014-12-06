@@ -108,7 +108,8 @@ public class Connection implements Runnable {
 
 	/** Wait for a message from the connection. Ignores characters beyond
 	 bufferSize.
-	 @return The message. */
+	 @return The message.
+	 @throws IOException Passes the underlieing socket's exceptions to the caller. */
 	public String getFrom() throws IOException {
 		if(in == null) return null;
 		/* no way that's safe: return in.readLine();*/

@@ -18,7 +18,7 @@ import main.Connection;
 /** This is the entry-point for starting the mud and listening for connections.
  @author Neil */
 
-class FourOneFourMud implements Iterable<Connection> {
+public class FourOneFourMud implements Iterable<Connection> {
 
 	private static final int fibonacci20    = 6765; /* fixme: should be variable */
 	private static final int maxConnections = 256;
@@ -72,7 +72,9 @@ class FourOneFourMud implements Iterable<Connection> {
 	 @param port
 		the mud port
 	 @param poolSize
-		how many simultaneous connections should we allow */
+		how many simultaneous connections should we allow
+	 @throws IOException
+		Passes the IOException from the underlyieng sockets. */
 	public FourOneFourMud(int port, int poolSize) throws IOException {
 		System.err.print("414Mud starting up on port " + port
 						 + "; FixedThreadPool size " + poolSize + ".\n");
@@ -123,7 +125,8 @@ class FourOneFourMud implements Iterable<Connection> {
 
 	}
 
-	/** Closes a connection. */
+	/** Closes a connection.
+	 @param c The connection to close. */
 	public void deleteClient(Connection c) {
 		System.err.print(c + " is closed: " + c.getSocket().isClosed() + "; removing from " + name + ".\n");
 		clients.remove(c);
@@ -252,6 +255,7 @@ class FourOneFourMud implements Iterable<Connection> {
 		return e3s; /* 1B45 where our class is held; 304-414 2014-Fall */
 	}
 
+	/** @return The place you start. */
 	public Room getUniverse() {
 		return this.centerOfUniverse;
 	}
@@ -263,18 +267,23 @@ class FourOneFourMud implements Iterable<Connection> {
 		return p.compareTo(password) == 0;
 	}
 
+	/** A list of commands that the Connection
+	 @@deprecated @see{#iterator}
 	public List<Connection> getClients() {
 		return clients;
-	}
+	}*/
 
+	/** @return The name set when the mud was started. */
 	public String getName() {
 		return name;
 	}
 
+	/** @return Gets the iterator of all the connections. */
 	public Iterator<Connection> iterator() {
 		return clients.iterator();
 	}
 
+	/** @return Gets the Message of the Day. */
 	public String getMotd() {
 		return motd;
 	}
